@@ -3,6 +3,7 @@ using LibraryApp.Classes;
 using LibraryApp.Classes.Generics;
 using LibraryApp.Exceptions;
 using LybraryAppUtils.Classes;
+using Microsoft.IdentityModel.Tokens;
 
 
 namespace LibraryApp
@@ -32,7 +33,8 @@ namespace LibraryApp
                 Console.WriteLine("2.Cerca libro");
                 Console.WriteLine("3.Restituisci un libro");
                 Console.WriteLine("4.Prendi in prestito un libro");
-                Console.WriteLine("5.Esci");
+                Console.WriteLine("5.Aggiungi un libro");
+                Console.WriteLine("6.Esci");
                 menuInput = Console.ReadLine();
 
                 switch (menuInput)
@@ -74,7 +76,6 @@ namespace LibraryApp
                             }
                             catch (NotAvailableBook ex)
                             {
-
                                 Console.WriteLine(ex.Message);
                             }
 
@@ -135,12 +136,27 @@ namespace LibraryApp
                         }
 
                         break;
+                    case "5":
+                        Console.Write("Inserisci Titolo: ");
+                        string? title = Console.ReadLine();
+
+                        Console.Write("Inserisci Descrizione: ");
+                        string? description = Console.ReadLine();
+
+                        if (title.IsNullOrEmpty())
+                        {
+                            throw new NotAvailableBook("Titolo non valido");
+                        }
+
+                        DatabaseService.AddBook(title, description);
+
+                        break;
                     default:
                         Console.WriteLine("Inserisci un valore valido");
                         break;
                 }
                 // L'app ripete il programma finchè l'utente non sceglie di uscire dal ciclo con l'opzione dedicata
-            } while (menuInput != "5");
+            } while (menuInput != "6");
         }
     }
 }
