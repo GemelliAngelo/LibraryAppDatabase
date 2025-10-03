@@ -101,10 +101,6 @@ namespace LibraryApp
                             {
                                 Console.WriteLine(ex.Message);
                             }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine(ex.Message);
-                            }
                         }
                         else
                         {
@@ -122,10 +118,6 @@ namespace LibraryApp
                                 DatabaseService.BorrowBook(borrowInput);
                             }
                             catch (NotAvailableBook ex)
-                            {
-                                Console.WriteLine(ex.Message);
-                            }
-                            catch (Exception ex)
                             {
                                 Console.WriteLine(ex.Message);
                             }

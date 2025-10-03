@@ -57,7 +57,6 @@ namespace LybraryAppUtils.Classes
             {
                 connection.Open();
 
-                // Se è disponibile, aggiorno
                 var query = "UPDATE Books SET [Available]=@available WHERE Title=@title";
                 using (SqlCommand cmd = new(query, connection))
                 {
@@ -65,7 +64,7 @@ namespace LybraryAppUtils.Classes
                     cmd.Parameters.Add(CreateParameter("@available", false, DbType.Boolean));
                     var affectedRows = cmd.ExecuteNonQuery();
 
-                    if (affectedRows == 1)
+                    if (affectedRows == 0)
                     {
                         throw new NotAvailableBook("Errore: il libro non è disponibile o non esiste.");
                     }
@@ -137,6 +136,10 @@ namespace LybraryAppUtils.Classes
         {
             using (SqlConnection connection = new(_connectionString))
             {
+                if (Library<Book>.books.Any()) {
+                    Library<Book>.books.Clear();
+                }
+
                 connection.Open();
 
                 var query = "SELECT [ISBN],[Title],[PublishDate],[Description],[Available] FROM [Books]";
