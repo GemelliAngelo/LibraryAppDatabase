@@ -109,6 +109,7 @@ namespace LibraryAppUtils.Classes
                             Available = dr.GetBoolean("Available")
                         };
 
+                        Console.WriteLine("------------------------------");
                         Console.WriteLine(book);
                     }
                 }
@@ -141,6 +142,7 @@ namespace LibraryAppUtils.Classes
                             Available = dr.GetBoolean("Available")
                         };
 
+                        Console.WriteLine("------------------------------");
                         Console.WriteLine(book);
                     }
                 }
