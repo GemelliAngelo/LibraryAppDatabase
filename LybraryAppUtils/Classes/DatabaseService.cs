@@ -40,7 +40,7 @@ namespace LybraryAppUtils.Classes
 
                 var query = "SELECT [ISBN],[Title],[Description],[PublishDate] FROM [Books] WHERE ISBN=@isbn";
                 SqlCommand cmd = new(query, connection);
-                    // Crea i parametri e li sostituisce nella query
+                // Crea i parametri e li sostituisce nella query
                 cmd.Parameters.Add(CreateParameter("@isbn", isbn, DbType.Int64));
 
                 using (SqlDataReader dr = cmd.ExecuteReader())
@@ -54,7 +54,7 @@ namespace LybraryAppUtils.Classes
                     {
                         while (dr.Read())
                         {
-                            Console.WriteLine("-------------");
+                            Console.WriteLine("------------------------------");
                             Console.WriteLine($"{dr.GetInt64("ISBN")} - {dr.GetString("Title")} - {dr.GetDateTime("PublishDate")}");
                         }
                     }
@@ -83,7 +83,7 @@ namespace LybraryAppUtils.Classes
                     {
                         while (dr.Read())
                         {
-                            Console.WriteLine("-------------");
+                            Console.WriteLine("------------------------------");
                             Console.WriteLine($"{dr.GetInt64("ISBN")} - {dr.GetString("Title")} - {dr.GetDateTime("PublishDate")}");
                         }
                     }
@@ -179,7 +179,7 @@ namespace LybraryAppUtils.Classes
                     }
                     else
                     {
-                        Console.WriteLine("-------------");
+                        Console.WriteLine("------------------------------");
                         Console.WriteLine($"Hai restituito il libro [ISBN-{isbn}]");
                     }
                 }
@@ -206,7 +206,7 @@ namespace LybraryAppUtils.Classes
                     }
                     else
                     {
-                        Console.WriteLine("-------------");
+                        Console.WriteLine("------------------------------");
                         Console.WriteLine($"Hai preso in prestito {title}");
                     }
                 }
@@ -242,7 +242,7 @@ namespace LybraryAppUtils.Classes
 
             if (affectedRows == 1)
             {
-                Console.WriteLine("-------------");
+                Console.WriteLine("------------------------------");
                 Console.WriteLine($"Hai aggiunto {title} alla biblioteca");
             }
             else
@@ -264,7 +264,7 @@ namespace LybraryAppUtils.Classes
 
             if (affectedRows == 1)
             {
-                Console.WriteLine("-------------");
+                Console.WriteLine("------------------------------");
                 Console.WriteLine($"Hai eliminato il libro {isbn} dalla biblioteca");
             }
             else

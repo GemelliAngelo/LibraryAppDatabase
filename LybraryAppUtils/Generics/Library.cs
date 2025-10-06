@@ -44,7 +44,7 @@ namespace LibraryApp.Classes.Generics
             foreach (T book in _books)
             {
                 // Cicla e stampa ogni elemento della lista
-                Console.WriteLine("--------------------------");
+                Console.WriteLine("------------------------------");
                 Console.WriteLine(book);
             }
         }

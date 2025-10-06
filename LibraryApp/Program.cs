@@ -55,9 +55,9 @@ namespace LibraryApp
                             try
                             {
                                 // stampa ogni libro con separatori
-                                Console.WriteLine("---------------------------");
+                                Console.WriteLine("------------------------------");
                                 DatabaseService.RetrieveBook(Convert.ToInt64(searchInput));
-                                Console.WriteLine("---------------------------");
+                                Console.WriteLine("------------------------------");
 
                             }
                             catch (NotAvailableBook ex)
@@ -70,9 +70,9 @@ namespace LibraryApp
                             // Se l'input non è nè parsabile nè null, allora cerca per titolo, lanciando un errore nel caso non trovasse nessun risultato
                             try
                             {
-                                Console.WriteLine("---------------");
+                                Console.WriteLine("------------------------------");
                                 DatabaseService.RetrieveBook(searchInput);
-                                Console.WriteLine("---------------");
+                                Console.WriteLine("------------------------------");
                             }
                             catch (NotAvailableBook ex)
                             {
