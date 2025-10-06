@@ -22,29 +22,29 @@ namespace LibraryApp
             Il libro deve contenere almeno queste proprietà(ISBN, Nome, Descrizione, DataPubblicazione)
             */
 
-            string? menuInput;
+            int menuInput;
 
             do
             {
                 // cicla finchè l'input non è valido
                 Console.WriteLine("------------------------------");
                 Console.WriteLine("Cosa vuoi fare");
-                Console.WriteLine("1.Visualizza tutti i libri");
-                Console.WriteLine("2.Cerca libro");
-                Console.WriteLine("3.Restituisci un libro");
-                Console.WriteLine("4.Prendi in prestito un libro");
-                Console.WriteLine("5.Aggiungi un libro");
-                Console.WriteLine("6.Esci");
-                menuInput = Console.ReadLine();
+                Console.WriteLine("[1] Visualizza tutti i libri");
+                Console.WriteLine("[2] Cerca libro");
+                Console.WriteLine("[3] Restituisci un libro");
+                Console.WriteLine("[4] Prendi in prestito un libro");
+                Console.WriteLine("[5] Aggiungi un libro");
+                Console.WriteLine("[6] Esci");
+                menuInput = Convert.ToInt32(Console.ReadLine());
 
                 switch (menuInput)
                 {
-                    case "1":
+                    case 1:
                         Console.WriteLine("Ecco tutti i libri");
                         DatabaseService.RetrieveBooksList();
                         Library<Book>.PrintBooks();
                         break;
-                    case "2":
+                    case 2:
                         Console.WriteLine("Inserisci titolo o ISBN");
                         Console.Write("Cerca: ");
                         string? searchInput = Console.ReadLine();
@@ -67,7 +67,7 @@ namespace LibraryApp
                         }
                         else if (!long.TryParse(searchInput, out long res) && searchInput != null)
                         {
-                            // Se l'input non è nè parsabile nè null, allora cerca per titolo, lanciando un errore nel caso non trovasse nessun risultato
+                            // Se l'input non è nè parsabile nè null, allora cerca per titolo, lanciando un errore nel caso non trovasse risultati
                             try
                             {
                                 Console.WriteLine("------------------------------");
@@ -87,7 +87,7 @@ namespace LibraryApp
                         }
 
                         break;
-                    case "3":
+                    case 3:
                         Console.Write("Inserisci ISBN: ");
                         string? returnInput = Console.ReadLine();
                         if (returnInput != null)
@@ -108,7 +108,7 @@ namespace LibraryApp
                             Console.WriteLine("Inserisci un valore valido");
                         }
                         break;
-                    case "4":
+                    case 4:
                         Console.Write("Inserisci Titolo: ");
                         string? borrowInput = Console.ReadLine();
                         if (borrowInput != null)
@@ -129,7 +129,7 @@ namespace LibraryApp
                         }
 
                         break;
-                    case "5":
+                    case 5:
                         Console.Write("Inserisci Titolo: ");
                         string? title = Console.ReadLine();
 
@@ -152,7 +152,7 @@ namespace LibraryApp
                         break;
                 }
                 // L'app ripete il programma finchè l'utente non sceglie di uscire dal ciclo con l'opzione dedicata
-            } while (menuInput != "6");
+            } while (menuInput != 6);
         }
     }
 }
