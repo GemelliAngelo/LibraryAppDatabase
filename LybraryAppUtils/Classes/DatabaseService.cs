@@ -108,7 +108,6 @@ namespace LybraryAppUtils.Classes
 
                 using (SqlDataReader dr = cmd.ExecuteReader())
                 {
-                    List<Book> booksList = new();
                     while (dr.Read())
                     {
                         var book = new Book()
@@ -120,9 +119,8 @@ namespace LybraryAppUtils.Classes
                             Available = dr.GetBoolean("Available")
                         };
 
-                        booksList.Add(book);
+                        Library<Book>.AddBook(book);
                     }
-                    Library<Book>.AddBooks(booksList);
                 }
             }
             return Library<Book>.books;
