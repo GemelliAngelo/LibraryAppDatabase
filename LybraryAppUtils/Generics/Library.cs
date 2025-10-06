@@ -10,12 +10,12 @@ namespace LibraryApp.Classes.Generics
     // Classe generica perchè non specifica il tipo di elemento ma usa un carattere incognito che può essere sostituito
     public class Library<T> where T : Book
     {
-        // Dichiara una lista di libri privata poichè non serve essere modificabile
+        // Dichiara una lista di libri readonly
         public static readonly List<T> books = new();
 
         public static void AddBooks(List<T> book)
         {
-            // Aggiunge un libro alla lista privata
+            // Aggiunge un libro alla lista
             books.AddRange(book);
         }
 
@@ -23,7 +23,7 @@ namespace LibraryApp.Classes.Generics
         {
             foreach (Book book in books)
             {
-                // Cicla e stampa ogni elemento della lista privata tramite il metodo ToString
+                // Cicla e stampa ogni elemento della lista
                 Console.WriteLine("--------------------------");
                 Console.WriteLine(book);
             }

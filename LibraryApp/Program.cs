@@ -49,7 +49,7 @@ namespace LibraryApp
                         Console.Write("Cerca: ");
                         string? searchInput = Console.ReadLine();
 
-                        if (long.TryParse(searchInput, out long anno))
+                        if (long.TryParse(searchInput, out long year))
                         {
                             // Se l'input è parsabile, allora cerca per isbn, lanciando un errore nel caso non trovasse risultati
                             try
@@ -65,7 +65,7 @@ namespace LibraryApp
                                 Console.WriteLine(ex.Message);
                             }
                         }
-                        else if (searchInput != null)
+                        else if (!long.TryParse(searchInput, out long res) && searchInput != null)
                         {
                             // Se l'input non è nè parsabile nè null, allora cerca per titolo, lanciando un errore nel caso non trovasse nessun risultato
                             try
@@ -92,7 +92,7 @@ namespace LibraryApp
                         string? returnInput = Console.ReadLine();
                         if (returnInput != null)
                         {
-                            // Rende un libro scelto dall'utente tramite ISBN di nuovo disponibile da prestato
+                            // Rende un libro scelto dall'utente tramite ISBN disponibile solo se non disponibile
                             try
                             {
                                 DatabaseService.ReturnBook(Convert.ToInt64(returnInput));
@@ -113,6 +113,7 @@ namespace LibraryApp
                         string? borrowInput = Console.ReadLine();
                         if (borrowInput != null)
                         {
+                            // Rende un libro scelto dall'utente tramite titolo non disponibile solo se disponibile
                             try
                             {
                                 DatabaseService.BorrowBook(borrowInput);
@@ -137,10 +138,13 @@ namespace LibraryApp
 
                         if (title.IsNullOrEmpty())
                         {
+                            // Se il titolo inserito è null o vuoto blocca l'esecuzione e stampa un messaggio
                             throw new NotAvailableBook("Titolo non valido");
                         }
-
-                        DatabaseService.AddBook(title, description);
+                        else
+                        {
+                            DatabaseService.AddBook(title, description);
+                        }
 
                         break;
                     default:

@@ -15,82 +15,39 @@ namespace LybraryAppUtils.Classes
 {
     public abstract class DatabaseService
     {
+        // Stringa di collegamento al database
         private static string _connectionString = "Server=localhost;Database=Library;User Id=sa;Password=bitspa.1;TrustServerCertificate=true";
 
         public static SqlParameter CreateParameter(string paramName, object? value, DbType dbType)
         {
+            // Metodo che trasforma una variabile in un parametro utilizzabile nel Db
             return new SqlParameter(paramName, value)
             {
                 DbType = dbType
             };
         }
 
-        public static void ReturnBook(long isbn)
-        {
-            using (SqlConnection connection = new(_connectionString))
-            {
-                connection.Open();
+        #region Operazioni CRUD (Create, Read, Update, Delete) per i libri
 
-                var query = "UPDATE Books SET [Available]=@available WHERE ISBN=@isbn AND [Available] = 0";
-                using (SqlCommand cmd = new(query, connection))
-                {
-                    cmd.Parameters.Add(CreateParameter("@isbn", isbn, DbType.Int64));
-                    cmd.Parameters.Add(CreateParameter("@available", true, DbType.Boolean));
-                    var affectedRows = cmd.ExecuteNonQuery();
-
-                    if (affectedRows == 0)
-                    {
-                        throw new NotAvailableBook("Errore: il libro è già disponibile o non esiste.");
-                    }
-                    else
-                    {
-                        Console.WriteLine("-------------");
-                        Console.WriteLine($"Hai restituito il libro [ISBN-{isbn}]");
-                    }
-                }
-            }
-        }
-
-        public static void BorrowBook(string title)
-        {
-            using (SqlConnection connection = new(_connectionString))
-            {
-                connection.Open();
-
-                var query = "UPDATE Books SET [Available]=@available WHERE Title=@title";
-                using (SqlCommand cmd = new(query, connection))
-                {
-                    cmd.Parameters.Add(CreateParameter("@title", title, DbType.String));
-                    cmd.Parameters.Add(CreateParameter("@available", false, DbType.Boolean));
-                    var affectedRows = cmd.ExecuteNonQuery();
-
-                    if (affectedRows == 0)
-                    {
-                        throw new NotAvailableBook("Errore: il libro non è disponibile o non esiste.");
-                    }
-                    else
-                    {
-                        Console.WriteLine("-------------");
-                        Console.WriteLine($"Hai preso in prestito {title}");
-                    }
-                }
-            }
-        }
-
+        #region READ
+        // Restituisce un libro filtrando per ISBN
         public static void RetrieveBook(long isbn)
         {
             using (SqlConnection connection = new(_connectionString))
             {
+                // Metodo using che chiude la connesione tramite IDisposable appena esce dallo scope
                 connection.Open();
 
                 var query = "SELECT [ISBN],[Title],[Description],[PublishDate] FROM [Books] WHERE ISBN=@isbn";
                 SqlCommand cmd = new(query, connection);
+                    // Crea i parametri e li sostituisce nella query
                 cmd.Parameters.Add(CreateParameter("@isbn", isbn, DbType.Int64));
 
                 using (SqlDataReader dr = cmd.ExecuteReader())
                 {
                     if (!dr.HasRows)
                     {
+                        // Se non trova nessun libro lancia eccezione con messaggio
                         throw new NotAvailableBook("Libro non trovato");
                     }
                     else
@@ -104,6 +61,8 @@ namespace LybraryAppUtils.Classes
                 }
             }
         }
+
+        // Restituisce un libro filtrando per Titolo
         public static void RetrieveBook(string title)
         {
             using (SqlConnection connection = new(_connectionString))
@@ -132,11 +91,13 @@ namespace LybraryAppUtils.Classes
             }
         }
 
+        // Restituisce una lista Library di tutti i libri
         public static List<Book> RetrieveBooksList()
         {
             using (SqlConnection connection = new(_connectionString))
             {
-                if (Library<Book>.books.Any()) {
+                if (Library<Book>.books.Any())
+                {
                     Library<Book>.books.Clear();
                 }
 
@@ -167,12 +128,14 @@ namespace LybraryAppUtils.Classes
             return Library<Book>.books;
         }
 
+        // Restituisce una lista Library di tutti i libri tramite Stored Procedures
         public static List<Book> RetrieveBooksListSp()
         {
             using (SqlConnection connection = new(_connectionString))
             {
                 connection.Open();
 
+                // Esegue la stored procedures al posto della solita query
                 var query = "sp_GetBooks";
                 SqlCommand cmd = new(query, connection);
 
@@ -197,10 +160,68 @@ namespace LybraryAppUtils.Classes
             }
             return Library<Book>.books;
         }
+        #endregion
 
-        public static void AddBook(string title, string description)
+        // Modifica la colonna available del libro filtrato per isbn da false a true
+        public static void ReturnBook(long isbn)
         {
+            using (SqlConnection connection = new(_connectionString))
+            {
+                connection.Open();
 
+                var query = "UPDATE Books SET [Available]=@available WHERE ISBN=@isbn AND [Available] = 0";
+                using (SqlCommand cmd = new(query, connection))
+                {
+                    cmd.Parameters.Add(CreateParameter("@isbn", isbn, DbType.Int64));
+                    cmd.Parameters.Add(CreateParameter("@available", true, DbType.Boolean));
+                    // Esegue la query e restituisce il numero di righe modificate
+                    var affectedRows = cmd.ExecuteNonQuery();
+
+                    if (affectedRows == 0)
+                    {
+                        // Se nessuna riga ha subito modifica lancia eccezione con messaggio
+                        throw new NotAvailableBook("Errore: il libro è già disponibile o non esiste.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("-------------");
+                        Console.WriteLine($"Hai restituito il libro [ISBN-{isbn}]");
+                    }
+                }
+            }
+        }
+
+        // Modifica la colonna available del libro filtrato per titolo da true a false
+        public static void BorrowBook(string title)
+        {
+            using (SqlConnection connection = new(_connectionString))
+            {
+                connection.Open();
+
+                var query = "UPDATE Books SET [Available]=@available WHERE Title=@title";
+                using (SqlCommand cmd = new(query, connection))
+                {
+                    cmd.Parameters.Add(CreateParameter("@title", title, DbType.String));
+                    cmd.Parameters.Add(CreateParameter("@available", false, DbType.Boolean));
+                    var affectedRows = cmd.ExecuteNonQuery();
+
+                    if (affectedRows == 0)
+                    {
+                        throw new NotAvailableBook("Errore: il libro non è disponibile o non esiste.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("-------------");
+                        Console.WriteLine($"Hai preso in prestito {title}");
+                    }
+                }
+            }
+        }
+
+        // Aggiunge un libro al database
+        public static void AddBook(string? title, string? description)
+        {
+            // Genera dati fittizzi per riempire i dati non inseriti dall'utente
             Faker<Book> faker = new Faker<Book>("it")
             .RuleFor(b => b.ISBN, setter => setter.Random.Long(1000000000000, 9999999999999))
             .RuleFor(b => b.Title, setter => title)
@@ -213,14 +234,13 @@ namespace LybraryAppUtils.Classes
             using SqlConnection connection = new(_connectionString);
             connection.Open();
 
-            var query = "INSERT INTO Books(ISBN, Title, Description, PublishDate, Available) VALUES(@isbn, @title, @description, @publishdate, @available)";
+            var query = "INSERT INTO Books(ISBN, Title, Description, Available) VALUES(@isbn, @title, @description, @available)";
 
             SqlCommand cmd = new(query, connection);
             cmd.Parameters.AddRange([
                 CreateParameter("@isbn", book.ISBN, DbType.Int64),
                 CreateParameter("@title", book.Title, DbType.String),
                 CreateParameter("@description", book.Description, DbType.String),
-                CreateParameter("@publishdate", book.PublishDate, DbType.DateTime2),
                 CreateParameter("@available", book.Available, DbType.Boolean),
             ]);
             var affectedRows = cmd.ExecuteNonQuery();
@@ -236,6 +256,7 @@ namespace LybraryAppUtils.Classes
             }
         }
 
+        // Cancella un libro filtrato tramite ISBN dal database
         public static void DeleteBook(long isbn)
         {
             using SqlConnection connection = new(_connectionString);
@@ -256,5 +277,6 @@ namespace LybraryAppUtils.Classes
                 throw new NotAvailableBook("Errore: il libro non è disponibile o non esiste.");
             }
         }
+        #endregion
     }
 }
