@@ -96,10 +96,7 @@ namespace LybraryAppUtils.Classes
         {
             using (SqlConnection connection = new(_connectionString))
             {
-                if (Library<Book>.books.Any())
-                {
-                    Library<Book>.books.Clear();
-                }
+                Library<Book>.Clear();
 
                 connection.Open();
 
@@ -123,7 +120,7 @@ namespace LybraryAppUtils.Classes
                     }
                 }
             }
-            return Library<Book>.books;
+            return Library<Book>.GetBooks();
         }
 
         // Restituisce una lista Library di tutti i libri tramite Stored Procedures
@@ -156,7 +153,7 @@ namespace LybraryAppUtils.Classes
                     Library<Book>.AddBooks(booksList);
                 }
             }
-            return Library<Book>.books;
+            return Library<Book>.GetBooks();
         }
         #endregion
 
