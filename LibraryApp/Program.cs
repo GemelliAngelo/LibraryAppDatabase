@@ -1,8 +1,5 @@
-﻿using Bogus;
-using LibraryApp.Classes;
-using LibraryApp.Classes.Generics;
-using LibraryApp.Exceptions;
-using LybraryAppUtils.Classes;
+﻿using LibraryApp.Exceptions;
+using LibraryAppUtils.Classes;
 using Microsoft.IdentityModel.Tokens;
 
 
@@ -42,7 +39,6 @@ namespace LibraryApp
                     case 1:
                         Console.WriteLine("Ecco tutti i libri");
                         DatabaseService.RetrieveBooksList();
-                        Library<Book>.PrintBooks();
                         break;
                     case 2:
                         Console.WriteLine("Inserisci titolo o ISBN");

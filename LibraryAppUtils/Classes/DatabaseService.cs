@@ -1,17 +1,11 @@
 ﻿using Bogus;
 using LibraryApp.Classes;
-using LibraryApp.Classes.Generics;
 using LibraryApp.Exceptions;
 using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
 
-namespace LybraryAppUtils.Classes
+namespace LibraryAppUtils.Classes
 {
     public abstract class DatabaseService
     {
@@ -92,11 +86,10 @@ namespace LybraryAppUtils.Classes
         }
 
         // Restituisce una lista Library di tutti i libri
-        public static List<Book> RetrieveBooksList()
+        public static void RetrieveBooksList()
         {
             using (SqlConnection connection = new(_connectionString))
             {
-                Library<Book>.Clear();
 
                 connection.Open();
 
@@ -116,15 +109,14 @@ namespace LybraryAppUtils.Classes
                             Available = dr.GetBoolean("Available")
                         };
 
-                        Library<Book>.AddBook(book);
+                        Console.WriteLine(book);
                     }
                 }
             }
-            return Library<Book>.GetBooks();
         }
 
         // Restituisce una lista Library di tutti i libri tramite Stored Procedures
-        public static List<Book> RetrieveBooksListSp()
+        public static void RetrieveBooksListSp()
         {
             using (SqlConnection connection = new(_connectionString))
             {
@@ -134,9 +126,10 @@ namespace LybraryAppUtils.Classes
                 var query = "sp_GetBooks";
                 SqlCommand cmd = new(query, connection);
 
+
                 using (SqlDataReader dr = cmd.ExecuteReader())
                 {
-                    List<Book> booksList = new();
+                    List<Book> books = new();
                     while (dr.Read())
                     {
                         var book = new Book()
@@ -148,12 +141,10 @@ namespace LybraryAppUtils.Classes
                             Available = dr.GetBoolean("Available")
                         };
 
-                        booksList.Add(book);
+                        Console.WriteLine(book);
                     }
-                    Library<Book>.AddBooks(booksList);
                 }
             }
-            return Library<Book>.GetBooks();
         }
         #endregion
 
